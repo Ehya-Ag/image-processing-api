@@ -39,9 +39,9 @@ describe('Tests for image processing API', (): void => {
       const response: Response = await request.get('/api/images?&width=0&height=100');
       expect(response.status).toBe(400);
     });
-    it('responds with status 500 if all params is correct and image not exist : /api/images?filename=encenadaportno&width=200&height=400', async (): Promise<void> => {
+    it('responds with status 400 if all params is correct and image not exist : /api/images?filename=encenadaportno&width=200&height=400', async (): Promise<void> => {
       const response: Response = await request.get('/api/images?filename=encenadaportno&width=200&height=400');
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(400);
     });
     it('responds with status 200 if all params is correct and image exist : /api/images?filename=encenadaport&width=200&height=400', async (): Promise<void> => {
       const response: Response = await request.get('/api/images?filename=encenadaport&width=200&height=400');
