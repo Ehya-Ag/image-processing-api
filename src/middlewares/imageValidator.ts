@@ -2,20 +2,33 @@
  * This is a middleware for validating an image processing request
  */
 import { Request, Response, NextFunction } from 'express';
+import { AppError, HttpCode } from '../helpers/appError';
 import File from '../helpers/file';
 
-const imageValidator = (req: Request, res: Response, next: NextFunction): Response | void => {
-  if (!File.checkImageParams(req.query.filename as string, req.query.width as string, req.query.height as string)) {
-    return res.status(400).send('You must provide: file name, width and height');
-  }
+const imageValidator = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const filename: string = req.query.filename as string;
+  const width: string = req.query.width as string;
+  const height: string = req.query.height as string;
 
-  if (!File.checkImageWidth(req.query.width as string)) {
-    return res.status(400).send('You must provide a numeric width greater than zero');
-  }
+  if (!filename)
+    throw new AppError({
+      httpCode: HttpCode.BAD_REQUEST,
+      description: 'The filename parameter is required'
+    });
 
-  if (!File.checkImageHeight(req.query.height as string)) {
-    return res.status(400).send('You must provide a numeric height greater than zero');
-  }
+  if (isNaN(Number(width)) || Number(width) <= 0)
+    throw new AppError({
+      httpCode: HttpCode.BAD_REQUEST,
+      description: 'The width is invalid. Width must be a numeric value greater than zero'
+    });
+
+  if (isNaN(Number(height)) || Number(height) <= 0)
+    throw new AppError({
+      httpCode: HttpCode.BAD_REQUEST,
+      description: 'The height is invalid. Height must be a numeric value greater than zero'
+    });
+
+  await File.isImageAvailable(req.query.filename as string);
 
   next();
 };

@@ -24,7 +24,8 @@
         "named": "never",
         "asyncArrow": "always"
       }],
-      "no-extra-boolean-cast": "off"
+      "no-extra-boolean-cast": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
     },
     "parserOptions": {
       "ecmaVersion": 2018,
